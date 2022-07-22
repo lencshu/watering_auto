@@ -1,6 +1,6 @@
 int plantPin = 7;
-int timeDelayOn = 60 * 10;
-int timeDelayOff = 60 * 60 * 3;
+int timeDelayUnit = 30 * 1;
+int timeDelayOff = 60 * 60 * 8;
 // int timeDelayOn = 1000 * 60 * 60 * 3;
 // int timeDelayOff = 1000 * 60 * 20;
 void setup()
@@ -13,24 +13,33 @@ void setup()
   // Serial.println("start ");
 }
 
+void delayCustom(int duration)
+{
+  // for (int count = 0; count < timeDelayOn; count++)
+  for (int count = 0; count < duration; count++)
+  {
+    delay(1000);
+  }
+}
+
+void wateringUnit()
+{
+  digitalWrite(plantPin, LOW);
+  delayCustom(timeDelayUnit);
+  digitalWrite(plantPin, HIGH);
+  delayCustom(timeDelayUnit);
+}
+
 void loop()
 {
   //   int SensorValue = analogRead(A5);
   //   if(SensorValue >= 500)
   //   {
-  digitalWrite(plantPin, LOW);
+  wateringUnit();
+  wateringUnit();
   // Serial.print("LOW-ON ");
-  for (int count = 0; count < timeDelayOn; count++)
-  {
-    delay(1000);
-  }
-  // delay(timeDelayOn);
   // Serial.print("HIGH-OFF ");
   digitalWrite(plantPin, HIGH);
-  for (int count = 0; count < timeDelayOff; count++)
-  {
-    delay(1000);
-  }
+  delayCustom(timeDelayOff);
   //   }
-  //   delay(50);
 }
