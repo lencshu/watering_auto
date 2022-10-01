@@ -37,6 +37,8 @@ void loop()
   //   {
   wateringUnit();
   wateringUnit();
+  wateringUnit();
+  wateringUnit();
   // Serial.print("LOW-ON ");
   // Serial.print("HIGH-OFF ");
   digitalWrite(plantPin, HIGH);
