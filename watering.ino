@@ -1,6 +1,6 @@
 int plantPin = 7;
-int timeDelayUnit = 30 * 1;
-int timeDelayOff = 60 * 60 * 16;
+int timeDelayUnit = 25 * 1;
+int timeDelayOff8h = 60 * 60 * 8;
 // int timeDelayOn = 1000 * 60 * 60 * 3;
 // int timeDelayOff = 1000 * 60 * 20;
 void setup()
@@ -13,10 +13,10 @@ void setup()
   // Serial.println("start ");
 }
 
-void delayCustom(int duration)
+void delay1s(int nbSecond)
 {
   // for (int count = 0; count < timeDelayOn; count++)
-  for (int count = 0; count < duration; count++)
+  for (int count = 0; count < nbSecond; count++)
   {
     delay(1000);
   }
@@ -25,9 +25,11 @@ void delayCustom(int duration)
 void wateringUnit()
 {
   digitalWrite(plantPin, LOW);
-  delayCustom(timeDelayUnit);
+  Serial.println("LOW-ON 25s");
+  delay1s(timeDelayUnit);
   digitalWrite(plantPin, HIGH);
-  delayCustom(timeDelayUnit);
+  Serial.println("HIGH-OFF 25s");
+  delay1s(timeDelayUnit);
 }
 
 void loop()
@@ -41,7 +43,9 @@ void loop()
   wateringUnit();
   // Serial.print("LOW-ON ");
   // Serial.print("HIGH-OFF ");
+  Serial.println("HIGH-OFF 16h");
   digitalWrite(plantPin, HIGH);
-  delayCustom(timeDelayOff);
+  delay1s(timeDelayOff8h);
+  delay1s(timeDelayOff8h);
   //   }
 }
