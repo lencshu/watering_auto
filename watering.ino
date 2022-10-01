@@ -1,6 +1,6 @@
 int plantPin = 7;
 int timeDelayUnit = 30 * 1;
-int timeDelayOff = 60 * 60 * 8;
+int timeDelayOff = 60 * 60 * 16;
 // int timeDelayOn = 1000 * 60 * 60 * 3;
 // int timeDelayOff = 1000 * 60 * 20;
 void setup()

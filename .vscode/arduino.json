@@ -1,5 +1,5 @@
 {
-    "port": "COM11",
+    "port": "COM8",
     "board": "arduino:avr:uno",
     "programmer": "arduino:arduinoisp",
     "sketch": "watering.ino"
