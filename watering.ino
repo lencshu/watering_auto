@@ -1,5 +1,7 @@
 int plantPin = 7;
+// 连续浇水时间
 int timeDelayUnit = 25 * 1;
+// 浇水间隔时间20h
 int timeDelayOff8h = 60 * 60 * 8;
 // int timeDelayOn = 1000 * 60 * 60 * 3;
 // int timeDelayOff = 1000 * 60 * 20;
