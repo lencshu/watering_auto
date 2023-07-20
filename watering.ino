@@ -17,6 +17,7 @@ void setup()
 
 void delay1s(int nbSecond)
 {
+  Serial.println(nbSecond);
   // for (int count = 0; count < timeDelayOn; count++)
   for (int count = 0; count < nbSecond; count++)
   {
@@ -27,10 +28,10 @@ void delay1s(int nbSecond)
 void wateringUnit()
 {
   digitalWrite(plantPin, LOW);
-  Serial.println("LOW-ON 25s");
+  Serial.println("LOW-ON");
   delay1s(timeDelayUnit);
   digitalWrite(plantPin, HIGH);
-  Serial.println("HIGH-OFF 25s");
+  Serial.println("HIGH-OFF");
   delay1s(timeDelayUnit);
 }
 
@@ -45,7 +46,7 @@ void loop()
   wateringUnit();
   // Serial.print("LOW-ON ");
   // Serial.print("HIGH-OFF ");
-  Serial.println("HIGH-OFF 16h");
+  Serial.println("HIGH-OFF");
   digitalWrite(plantPin, HIGH);
   delay1s(timeDelayOff4h);
   delay1s(timeDelayOff4h);
