@@ -1,6 +1,6 @@
 {
-    "port": "COM8",
+    "port": "/dev/tty.usbmodem212401",
     "board": "arduino:avr:uno",
     "programmer": "arduino:arduinoisp",
-    "sketch": "watering.ino"
+    "sketch": "watering/watering.ino"
 }
