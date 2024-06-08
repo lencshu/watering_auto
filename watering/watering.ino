@@ -1,6 +1,7 @@
 const int plantPin = 7;
 const int potPin = A1;                 // 滑动变阻器连接的接口
-const int timeDelayUnit = 35;          // 单次浇水时间，单位：秒
+const int timeWaterOn = 30;            // 浇水时间，单位：秒
+const int timeWaterOff = 30;           // 停止浇水时间，单位：秒
 const int totalDayTime = 24 * 60 * 60; // 一天的总时间，单位：秒
 
 int wateringTimes = 0;            // 一天浇水次数
@@ -24,11 +25,12 @@ void updateWateringTimes()
   {
     wateringTimes = 1; // 防止浇水次数为0
   }
-  timeDelayBetweenWatering = (totalDayTime / wateringTimes) - timeDelayUnit; // 计算两次浇水之间的延迟时间
+  timeDelayBetweenWatering = (totalDayTime / wateringTimes) - (timeWaterOn + timeWaterOff) * 4; // 计算两次浇水之间的延迟时间
   Serial.print("Updated Watering Times: ");
   Serial.println(wateringTimes);
   Serial.print("Time Delay Between Watering: ");
-  Serial.println(timeDelayBetweenWatering);
+  Serial.print(timeDelayBetweenWatering / 3600.0, 2); // 将延迟时间以小时为单位打印，并保留两位小数
+  Serial.println(" hours");
 }
 
 void delaySecondsWithPotCheck(int seconds)
@@ -52,13 +54,16 @@ void delaySecondsWithPotCheck(int seconds)
 
 void wateringCycle()
 {
-  digitalWrite(plantPin, LOW);
-  Serial.println("LOW-ON");
-  delaySecondsWithPotCheck(timeDelayUnit);
+  for (int i = 0; i < 4; i++)
+  {
+    digitalWrite(plantPin, LOW);
+    Serial.println("LOW-ON");
+    delaySecondsWithPotCheck(timeWaterOn);
 
-  digitalWrite(plantPin, HIGH);
-  Serial.println("HIGH-OFF");
-  delaySecondsWithPotCheck(timeDelayUnit);
+    digitalWrite(plantPin, HIGH);
+    Serial.println("HIGH-OFF");
+    delaySecondsWithPotCheck(timeWaterOff);
+  }
 }
 
 void loop()
@@ -78,6 +83,6 @@ void loop()
     Serial.println("HIGH-OFF");
 
     // 在下一次循环之前进行一天的延时
-    delaySecondsWithPotCheck(totalDayTime - (wateringTimes * timeDelayUnit) - ((wateringTimes - 1) * timeDelayBetweenWatering));
+    delaySecondsWithPotCheck(totalDayTime - wateringTimes * (timeWaterOn + timeWaterOff) * 4);
   }
 }
