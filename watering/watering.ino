@@ -7,6 +7,7 @@ const int totalDayTime = 24 * 60 * 60; // 一天的总时间，单位：秒
 int wateringTimes = 0;            // 一天浇水次数
 int previousPotValue = -1;        // 上一次读取的滑动变阻器的值
 int timeDelayBetweenWatering = 0; // 两次浇水之间的延迟
+String currentState = "HIGH-OFF"; // 当前浇水状态
 
 void setup()
 {
@@ -40,7 +41,9 @@ void delaySecondsWithPotCheck(int seconds)
     int potValue = analogRead(potPin);
     int actualPotValue = 1023 - potValue;
     Serial.print("Current Potentiometer Value: ");
-    Serial.println(actualPotValue);
+    Serial.print(actualPotValue);
+    Serial.print(" - ");
+    Serial.println(currentState);
     if (actualPotValue / 100 != previousPotValue / 100)
     { // 检查百位数是否变化
       previousPotValue = actualPotValue;
@@ -57,11 +60,13 @@ void wateringCycle()
   for (int i = 0; i < 4; i++)
   {
     digitalWrite(plantPin, LOW);
-    Serial.println("LOW-ON");
+    currentState = "LOW-ON";
+    Serial.println(currentState);
     delaySecondsWithPotCheck(timeWaterOn);
 
     digitalWrite(plantPin, HIGH);
-    Serial.println("HIGH-OFF");
+    currentState = "HIGH-OFF";
+    Serial.println(currentState);
     delaySecondsWithPotCheck(timeWaterOff);
   }
 }
@@ -80,7 +85,8 @@ void loop()
     }
 
     digitalWrite(plantPin, HIGH); // 确保浇水结束后保持关闭
-    Serial.println("HIGH-OFF");
+    currentState = "HIGH-OFF";
+    Serial.println(currentState);
 
     // 在下一次循环之前进行一天的延时
     delaySecondsWithPotCheck(totalDayTime - wateringTimes * (timeWaterOn + timeWaterOff) * 4);
