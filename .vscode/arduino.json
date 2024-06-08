@@ -1,5 +1,5 @@
 {
-    "port": "/dev/tty.usbmodem212401",
+    "port": "/dev/tty.usbmodem1101",
     "board": "arduino:avr:uno",
     "programmer": "arduino:arduinoisp",
     "sketch": "watering/watering.ino"
