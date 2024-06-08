@@ -1,14 +1,14 @@
 const int plantPin = 7;
-const int potPin = A1;                 // 滑动变阻器连接的接口
-const int timeWaterOn = 30;            // 浇水时间，单位：秒
-const int timeWaterOff = 30;           // 停止浇水时间，单位：秒
-const int cyclesPerWatering = 4;       // 每次浇水的循环次数
-const int totalDayTime = 24 * 60 * 60; // 一天的总时间，单位：秒
+const int potPin = A1;                  // 滑动变阻器连接的接口
+const long timeWaterOn = 30;            // 浇水时间，单位：秒
+const long timeWaterOff = 30;           // 停止浇水时间，单位：秒
+const int cyclesPerWatering = 4;        // 每次浇水的循环次数
+const long totalDayTime = 24 * 60 * 60; // 一天的总时间，单位：秒
 
-int wateringTimes = 0;            // 一天浇水次数
-int previousPotValue = -1;        // 上一次读取的滑动变阻器的值
-int timeDelayBetweenWatering = 0; // 两次浇水之间的延迟
-String currentState = "HIGH-OFF"; // 当前浇水状态
+int wateringTimes = 0;             // 一天浇水次数
+int previousPotValue = -1;         // 上一次读取的滑动变阻器的值
+long timeDelayBetweenWatering = 0; // 两次浇水之间的延迟
+String currentState = "HIGH-OFF";  // 当前浇水状态
 
 void setup()
 {
@@ -27,21 +27,30 @@ void updateWateringTimes()
   {
     wateringTimes = 1; // 防止浇水次数为0
   }
-  // 计算每个浇水单位的总时间
-  int totalWateringUnitTime = (timeWaterOn + timeWaterOff) * cyclesPerWatering;
-  // 计算两次浇水单位之间的延迟时间
-  timeDelayBetweenWatering = (totalDayTime - (totalWateringUnitTime * wateringTimes)) / wateringTimes;
+
+  // 每次浇水单位的总时间（包含四次30秒的浇水和30秒的停止）
+  long totalWateringUnitTime = (timeWaterOn + timeWaterOff) * cyclesPerWatering;
+  // 计算总的浇水时间
+  long totalWateringTime = totalWateringUnitTime * wateringTimes;
+  // 计算每次浇水单位之间的延迟时间
+  timeDelayBetweenWatering = (totalDayTime - totalWateringTime) / wateringTimes;
 
   Serial.print("Updated Watering Times: ");
   Serial.println(wateringTimes);
-  Serial.print("Time Delay Between Watering: ");
+  Serial.print("Total Watering Unit Time (s): ");
+  Serial.println(totalWateringUnitTime);
+  Serial.print("Total Watering Time (s): ");
+  Serial.println(totalWateringTime);
+  Serial.print("Time Delay Between Watering (s): ");
+  Serial.println(timeDelayBetweenWatering);
+  Serial.print("Time Delay Between Watering (hours): ");
   Serial.print(timeDelayBetweenWatering / 3600.0, 2); // 将延迟时间以小时为单位打印，并保留两位小数
   Serial.println(" hours");
 }
 
-void delaySecondsWithPotCheck(int seconds)
+void delaySecondsWithPotCheck(long seconds)
 {
-  for (int i = 0; i < seconds; i++)
+  for (long i = 0; i < seconds; i++)
   {
     int potValue = analogRead(potPin);
     int actualPotValue = 1023 - potValue;
