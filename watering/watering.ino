@@ -9,13 +9,31 @@ int wateringTimes = 0;             // 一天浇水次数
 int previousPotValue = -1;         // 上一次读取的滑动变阻器的值
 long timeDelayBetweenWatering = 0; // 两次浇水之间的延迟
 String currentState = "HIGH-OFF";  // 当前浇水状态
-bool debug = true;                 // 调试开关，设置为 true 以启用调试打印
+bool debug = false;                // 调试开关
 
 void setup()
 {
   Serial.begin(9600);
   pinMode(plantPin, OUTPUT);
   pinMode(potPin, INPUT);
+
+  // 检测串口监视器是否打开
+  unsigned long start = millis();
+  while (!Serial && (millis() - start < 5000))
+  {
+    // 等待5秒查看串口监视器是否打开
+  }
+
+  if (Serial)
+  {
+    debug = true; // 如果串口监视器打开，启用调试打印
+    Serial.println("Serial monitor detected, debugging enabled.");
+  }
+  else
+  {
+    debug = false; // 如果串口监视器未打开，禁用调试打印
+  }
+
   updateWateringTimes(); // 初始化浇水次数
 }
 
