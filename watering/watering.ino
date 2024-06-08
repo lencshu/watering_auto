@@ -1,14 +1,15 @@
 const int plantPin = 7;
-const int potPin = A1;                  // 滑动变阻器连接的接口
-const long timeWaterOn = 30;            // 浇水时间，单位：秒
-const long timeWaterOff = 30;           // 停止浇水时间，单位：秒
-const int cyclesPerWatering = 4;        // 每次浇水的循环次数
-const long totalDayTime = 24 * 60 * 60; // 一天的总时间，单位：秒
+const int potPin = A1;                     // 滑动变阻器连接的接口
+const long timeWaterOn = 30;               // 浇水时间，单位：秒
+const long timeWaterOff = 30;              // 停止浇水时间，单位：秒
+const int cyclesPerWatering = 4;           // 每次浇水的循环次数
+const long totalDayTime = 24L * 60L * 60L; // 一天的总时间，单位：秒，使用 L 后缀确保常量被正确处理为 long 类型
 
 int wateringTimes = 0;             // 一天浇水次数
 int previousPotValue = -1;         // 上一次读取的滑动变阻器的值
 long timeDelayBetweenWatering = 0; // 两次浇水之间的延迟
 String currentState = "HIGH-OFF";  // 当前浇水状态
+bool debug = true;                 // 调试开关，设置为 true 以启用调试打印
 
 void setup()
 {
@@ -35,17 +36,22 @@ void updateWateringTimes()
   // 计算每次浇水单位之间的延迟时间
   timeDelayBetweenWatering = (totalDayTime - totalWateringTime) / wateringTimes;
 
-  Serial.print("Updated Watering Times: ");
-  Serial.println(wateringTimes);
-  Serial.print("Total Watering Unit Time (s): ");
-  Serial.println(totalWateringUnitTime);
-  Serial.print("Total Watering Time (s): ");
-  Serial.println(totalWateringTime);
-  Serial.print("Time Delay Between Watering (s): ");
-  Serial.println(timeDelayBetweenWatering);
-  Serial.print("Time Delay Between Watering (hours): ");
-  Serial.print(timeDelayBetweenWatering / 3600.0, 2); // 将延迟时间以小时为单位打印，并保留两位小数
-  Serial.println(" hours");
+  if (debug)
+  {
+    Serial.print("Updated Watering Times: ");
+    Serial.println(wateringTimes);
+    Serial.print("Total Day Time (s): ");
+    Serial.println(totalDayTime);
+    Serial.print("Total Watering Unit Time (s): ");
+    Serial.println(totalWateringUnitTime);
+    Serial.print("Total Watering Time (s): ");
+    Serial.println(totalWateringTime);
+    Serial.print("Time Delay Between Watering (s): ");
+    Serial.println(timeDelayBetweenWatering);
+    Serial.print("Time Delay Between Watering (hours): ");
+    Serial.print(timeDelayBetweenWatering / 3600.0, 2); // 将延迟时间以小时为单位打印，并保留两位小数
+    Serial.println(" hours");
+  }
 }
 
 void delaySecondsWithPotCheck(long seconds)
@@ -54,19 +60,25 @@ void delaySecondsWithPotCheck(long seconds)
   {
     int potValue = analogRead(potPin);
     int actualPotValue = 1023 - potValue;
-    Serial.print("Current Potentiometer Value: ");
-    Serial.print(actualPotValue);
-    Serial.print(" - ");
-    Serial.print(currentState);
-    Serial.print(" - Watering Times: ");
-    Serial.print(wateringTimes);
-    Serial.print(" - Time Delay Between Watering: ");
-    Serial.print(timeDelayBetweenWatering / 3600.0, 2); // 以小时为单位打印，并保留两位小数
-    Serial.println(" hours");
+    if (debug)
+    {
+      Serial.print("Current Potentiometer Value: ");
+      Serial.print(actualPotValue);
+      Serial.print(" - ");
+      Serial.print(currentState);
+      Serial.print(" - Watering Times: ");
+      Serial.print(wateringTimes);
+      Serial.print(" - Time Delay Between Watering: ");
+      Serial.print(timeDelayBetweenWatering / 3600.0, 2); // 以小时为单位打印，并保留两位小数
+      Serial.println(" hours");
+    }
     if (actualPotValue / 100 != previousPotValue / 100)
     { // 检查百位数是否变化
       previousPotValue = actualPotValue;
-      Serial.println("Potentiometer value changed, aborting watering.");
+      if (debug)
+      {
+        Serial.println("Potentiometer value changed, aborting watering.");
+      }
       updateWateringTimes();
       return; // 终止当前浇水
     }
@@ -80,12 +92,18 @@ void wateringCycle()
   {
     digitalWrite(plantPin, LOW);
     currentState = "LOW-ON";
-    Serial.println(currentState);
+    if (debug)
+    {
+      Serial.println(currentState);
+    }
     delaySecondsWithPotCheck(timeWaterOn);
 
     digitalWrite(plantPin, HIGH);
     currentState = "HIGH-OFF";
-    Serial.println(currentState);
+    if (debug)
+    {
+      Serial.println(currentState);
+    }
     delaySecondsWithPotCheck(timeWaterOff);
   }
 }
@@ -105,7 +123,10 @@ void loop()
 
     digitalWrite(plantPin, HIGH); // 确保浇水结束后保持关闭
     currentState = "HIGH-OFF";
-    Serial.println(currentState);
+    if (debug)
+    {
+      Serial.println(currentState);
+    }
 
     // 在下一次循环之前进行一天的延时
     delaySecondsWithPotCheck(timeDelayBetweenWatering);
