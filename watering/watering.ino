@@ -43,7 +43,12 @@ void delaySecondsWithPotCheck(int seconds)
     Serial.print("Current Potentiometer Value: ");
     Serial.print(actualPotValue);
     Serial.print(" - ");
-    Serial.println(currentState);
+    Serial.print(currentState);
+    Serial.print(" - Watering Times: ");
+    Serial.print(wateringTimes);
+    Serial.print(" - Time Delay Between Watering: ");
+    Serial.print(timeDelayBetweenWatering / 3600.0, 2); // 以小时为单位打印，并保留两位小数
+    Serial.println(" hours");
     if (actualPotValue / 100 != previousPotValue / 100)
     { // 检查百位数是否变化
       previousPotValue = actualPotValue;
