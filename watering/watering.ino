@@ -1,7 +1,6 @@
 int plantPin = 7;
 // 连续浇水时间
 int timeDelayUnit = 35 * 1;
-// 浇水间隔时间20h
 int timeDelayOff4h = 60 * 60 * 4;
 // int timeDelayOn = 1000 * 60 * 60 * 3;
 // int timeDelayOff = 1000 * 60 * 20;
@@ -48,6 +47,7 @@ void loop()
   // Serial.print("HIGH-OFF ");
   Serial.println("HIGH-OFF");
   digitalWrite(plantPin, HIGH);
+  // 浇水间隔时间20h
   delay1s(timeDelayOff4h);
   delay1s(timeDelayOff4h);
   delay1s(timeDelayOff4h);
