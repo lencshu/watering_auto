@@ -1,6 +1,7 @@
 int plantPin = 7;
 // 连续浇水时间
-int timeDelayUnit = 35 * 1;
+int timeDelayUnitOn = 30 * 1;
+int timeDelayUnitOff = 10 * 1;
 // 浇水间隔时间20h
 int timeDelayOff4h = 60 * 60 * 4;
 // int timeDelayOn = 1000 * 60 * 60 * 3;
@@ -15,7 +16,7 @@ void setup()
   // Serial.println("start ");
 }
 
-void delay1s(int nbSecond)
+void delayBySecond(int nbSecond)
 {
   Serial.println(nbSecond);
   // for (int count = 0; count < timeDelayOn; count++)
@@ -29,10 +30,10 @@ void wateringUnit()
 {
   digitalWrite(plantPin, LOW);
   Serial.println("LOW-ON");
-  delay1s(timeDelayUnit);
+  delayBySecond(timeDelayUnitOn);
   digitalWrite(plantPin, HIGH);
   Serial.println("HIGH-OFF");
-  delay1s(timeDelayUnit);
+  delayBySecond(timeDelayUnitOff);
 }
 
 void loop()
@@ -42,14 +43,14 @@ void loop()
   //   {
   wateringUnit();
   wateringUnit();
-  wateringUnit();
-  wateringUnit();
+  // wateringUnit();
+  // wateringUnit();
   // Serial.print("LOW-ON ");
   // Serial.print("HIGH-OFF ");
   Serial.println("HIGH-OFF");
   digitalWrite(plantPin, HIGH);
-  delay1s(timeDelayOff4h);
-  delay1s(timeDelayOff4h);
-  delay1s(timeDelayOff4h);
+  delayBySecond(timeDelayOff4h);
+  delayBySecond(timeDelayOff4h);
+  delayBySecond(timeDelayOff4h);
   //   }
 }
