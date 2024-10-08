@@ -49,7 +49,7 @@ void loop()
   // Serial.print("HIGH-OFF ");
   Serial.println("HIGH-OFF");
   digitalWrite(plantPin, HIGH);
-// 浇水间隔 4h * 3
+// 浇水间隔 4h * 6
   delayBySecond(timeDelayOff4h);
   delayBySecond(timeDelayOff4h);
   delayBySecond(timeDelayOff4h);
